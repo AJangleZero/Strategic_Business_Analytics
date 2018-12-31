@@ -19,6 +19,7 @@
 ############################################################
 
 # Set your directory to the folder where you have downloaded the Insurance 2 dataset 
+setwd("C:/Users/Nino/Desktop/Strategic Business Analytics/Foundations of strategic business analytics/Week 3")
 
 # To clean up the memory of your current R session run the following line
 rm(list=ls(all=TRUE))
@@ -140,4 +141,3 @@ plot(data$month,data$sales,main="Chocolate sales by month",xlab="Month",ylab="Mo
 plot(data$time,data$sales,main="Chocolate sales over time",xlab="Time (in month)",ylab="Monthly sales",ylim=c(0,max(data$sales)*1.2),type='l')
 lines(data$time,regres$fitted.values,type='l',col='blue',lty=2)
 legend("topleft",c("Actual sales","Sales by the model"),lty=c(1,2),col=c('black','blue'))
-
