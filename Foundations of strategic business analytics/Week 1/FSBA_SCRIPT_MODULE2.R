@@ -19,9 +19,10 @@
 ############################################################
 # Set your directory to the folder where you have downloaded the SKU dataset
 
+setwd("C:/Users/Nino/Desktop/Strategic Business Analytics/Foundations of strategic business analytics/Week 1")
+
 # To clean up the memory of your current R session run the following line
 rm(list=ls(all=TRUE))
-setwd("C:/Users/Nino/Desktop/Strategic Business Analytics/Foundations of strategic business analytics/Week 1")
 
 # Let's load our dataset
 data=read.table('DATA_2.01_SKU.csv', header = T,sep=',') # The function read.table enables us to read flat files such as .csv files
@@ -161,85 +162,3 @@ aggdata=aggdata[order(aggdata$proportion,decreasing=T),] # Ordering from the lar
 # Let's draw the radar chart with the function stars()
 palette(rainbow(12, s = 0.6, v = 0.75)) # Select the colors to use
 stars(aggdata[,2:(ncol(data))], len = 0.6, key.loc = c(11, 6),xlim=c(2,12),main = "Segments", draw.segments = TRUE,nrow = 2, cex = .75,labels=aggdata$groups)
-
-
-
-#TRAINING QUIZ 1
-
-library(dplyr)
-library(tidyr)
-setwd("C:/Users/Nino/Desktop/Strategic Business Analytics/Foundations of strategic business analytics/Week 1")
-data=read.table('_eba2c079135882131db3690701bc9c97_PASTAPURCHASE_EDITED.csv', header = T,sep=',')
-
-#1
-mean(data$PASTA)
-sd(data$PASTA)
-
-#2
-data %>% filter(INCOME==min(INCOME)) %>% select (AREA)
-data %>% filter(INCOME==max(INCOME)) %>% select (AREA)
-
-#3
-data %>% select(HHID,PASTA) %>% group_by(HHID) %>% summarise(sum=sum(PASTA)) %>% filter(sum==max(sum))
-
-#4
-data %>% select(INCOME,AREA) %>% group_by(AREA) %>% summarise(ave=mean(INCOME)) %>% filter(AREA==4)
-
-#5
-data %>% select(HHID, AREA, INCOME, PASTA) %>% group_by(HHID) %>% summarise(INCOME=mean(INCOME), PASTA=sum(PASTA), AREA=mean(AREA)) %>%  filter(AREA==2 & INCOME > 20000 & PASTA >30) %>% summarise(N=n())
-
-#6
-cor(data$PASTA,data$EXPOS)
-
-#7
-data_filtered <- data %>% select(HHID, PASTA) %>% group_by(HHID) %>% summarise(PASTA=sum(PASTA))
-hist(data_filtered$PASTA)
-
-#8
-data_filtered <- data %>% select(TIME, PASTA) %>% group_by(TIME) %>% summarise(PASTA=sum(PASTA))
-plot(PASTA ~TIME, data_filtered)
-
-
-#QUIZ1
-rm(list=ls(all=TRUE))
-setwd("C:/Users/Nino/Desktop/Strategic Business Analytics/Foundations of strategic business analytics/Week 1")
-library(ggplot2)
-library(dplyr)
-
-#1
-data1 <- read.table('DATA_2.01_SKU.csv', header = T,sep=',') 
-question1 <- list(mean=mean(data1$CV), median=median(data1$CV))
-question1
-
-#2
-data1_scaled <- scale(data1)
-hclust1 <- hclust(dist(data1_scaled, method="euclidean"), method="ward.D")
-data1$segments_new <- cutree(hclust1,2)
-data1$segments_old <- cutree(hclust1,3)
-qplot(ADS,CV, data=data1, col=segments_old, size=segments_new)
-print("The segments Horses and Wild Bulls are merged")
-
-#3
-data2 <- read.table('DATA_2.02_HR.csv', header = T,sep=',') 
-plot(NP~LPE, data=data2)
-
-#4
-data2_reduced <- select(data2, S, LPE, NP)
-data2_red_scaled <- scale(data2_reduced)
-hclust2 <- hclust(dist(data2_red_scaled, method="euclidean"), method="ward.D")
-data2_reduced$segment <- cutree(hclust2,2) 
-data2_reduced %>% group_by(segment) %>% summarise(median=median(S))
-
-#5
-data3 <- read.table('DATA_2.03_Telco.csv', header = T,sep=',')
-data3_scaled <- scale(data3)
-hclust3 = hclust(dist(data3_scaled, method = "euclidean"), method="ward.D") 
-data3$segment= cutree(hclust3,k=5) 
-data3 %>% group_by(segment) %>% summarise_all(mean) %>% mutate(group=c("Silver",
-                                    "Heavy User", "Pro", "Light User", "YA"))
-
-data3 %>% group_by(segment) %>% summarise(n=n()) %>% mutate(group=c("Silver",
-                                    "Heavy User", "Pro", "Light User", "YA"))
-min(data3$Intern)
-print("The Young Adoult (YA) segment uses more data and text than any other segment")
-print("All the customers in the sample made at least one international call")
