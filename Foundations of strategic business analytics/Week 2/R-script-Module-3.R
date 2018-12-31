@@ -42,13 +42,12 @@
 
 # Set your directory to the folder where you have downloaded the Credit Scoring dataset
 
+setwd("C:/Users/Nino/Desktop/Strategic Business Analytics/Foundations of strategic business analytics/Week 2")
 
 
 # To clean up the memory of your current R session run the following line
 
 rm(list=ls(all=TRUE))
-setwd("C:/Users/Nino/Desktop/Strategic Business Analytics/Foundations of strategic business analytics/Week 2")
-
 
 # Let's load our dataset and call it data
 
@@ -284,50 +283,3 @@ symbols(x = aggbSatisRank$rankSatis, y = aggbSatisRank$left,
         main =  "Satisfaction and Employee Attrition",
 
         ylab = "Average Attrition Rate", xlab =  "Rank of Satisfaction")
-
-
-
-#Quiz 2
-rm(list=ls(all=TRUE))
-setwd("C:/Users/Nino/Desktop/Strategic Business Analytics/Foundations of strategic business analytics/Week 2")
-library(dplyr)
-
-#1
-data1 <- read.table('DATA_3.01_CREDIT.csv',sep=',',header=TRUE) 
-lreg <- lm(Rating~., data=data1)
-summary(lreg)
-cor(lreg$fitted.values, data1$Rating)
-print("The regression predicts correctly 98.67% of the observations")
-print("The variable balance has a positive impact on the rating, eveything else being equal")
-print("Students have, everything else being equal, a weaker rating")
-print("People with lerger income have, everything else being equal, a better rating")
-
-#2
-summary(lreg)
-print("Positive", "NS", "NS")
-print("F")
-
-#3
-lreg2 <- lm(Rating~Income+Cards+Married, data=data1)
-summary(lreg2)
-print("Positive", "Positive", "NS")
-
-#4
-data2 <- read.table('DATA_3.02_HR2.csv',sep=',',header=TRUE)
-logit <- glm(left ~ ., family=binomial(logit), data=data2)
-cutoff <- 0.5
-data2$fitted <- logit$fitted.values
-data2 %>% 
-  mutate(group=ifelse(fitted > 0.5,1,0)) %>% 
-  mutate(correct=ifelse(left==group,1,0)) %>% 
-  summarise(stay=1-mean(group), leave=mean(group), correctly=mean(correct)) %>%
-  mutate_all(round, digits=2)
-print("C")
-
-#5
-data2 <- read.table('DATA_3.02_HR2.csv',sep=',',header=TRUE)
-logit <- glm(left ~ ., family=binomial(logit), data=data2)
-summary(data2)
-summary(logit)
-data2 %>% group_by(TIC) %>% summarise(mean(left))
-print("B", "C", "D")
