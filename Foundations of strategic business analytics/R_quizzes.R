@@ -135,10 +135,9 @@ library(dplyr)
 #1
 data1 <- read.table('DATA_3.01_CREDIT.csv',sep=',',header=TRUE) 
 lreg <- lm(Rating~., data=data1)
-summary(lreg)
+summary(lreg)$r.squared 
 cor(lreg$fitted.values, data1$Rating)
-message("1: a) The regression predicts correctly 98.67% of the observations
-   c) The variable balance has a positive impact on the rating, eveything else being equal
+message("1: c) The variable balance has a positive impact on the rating, eveything else being equal
    e) Students have, everything else being equal, a weaker rating
    f) People with lerger income have, everything else being equal, a better rating")
 
@@ -161,12 +160,25 @@ data2 <- read.table('DATA_3.02_HR2.csv',sep=',',header=TRUE)
 logit <- glm(left ~ ., family=binomial(logit), data=data2)
 cutoff <- 0.5
 data2$fitted <- logit$fitted.values
+
+## This should be the answer, but they've made the mistake here :( 
 data2 %>% 
   mutate(group=ifelse(fitted > 0.5,1,0)) %>% 
   mutate(correct=ifelse(left==group,1,0)) %>% 
   summarise(stay=1-mean(group), leave=mean(group), correctly=mean(correct)) %>%
-  mutate_all(round, digits=2)
+  mutate_all(round, digits=2) 
 message("4: ", "C")
+
+## This is the answer they want
+data2 %>% 
+  mutate(group=ifelse(fitted > 0.5,1,0)) %>% 
+  mutate(correct=ifelse(left==group,1,0)) %>% 
+  mutate(like_stay=ifelse(left==group & group==0,1,0)) %>% 
+  mutate(like_leave=ifelse(left==group & group==1,1,0)) %>% 
+  group_by(left) %>%
+  summarise(stay=mean(like_stay), leave=mean(like_leave), correctly=mean(correct)) %>%
+  mutate_all(round, digits=2) 
+message("4: ", "")
 
 #5
 data2 <- read.table('DATA_3.02_HR2.csv',sep=',',header=TRUE)
