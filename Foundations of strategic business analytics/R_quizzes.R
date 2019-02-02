@@ -178,7 +178,7 @@ data2 %>%
   group_by(left) %>%
   summarise(stay=mean(like_stay), leave=mean(like_leave), correctly=mean(correct)) %>%
   mutate_all(round, digits=2) 
-message("4: ", "")
+message("4: ", "D")
 
 #5
 data2 <- read.table('DATA_3.02_HR2.csv',sep=',',header=TRUE)
